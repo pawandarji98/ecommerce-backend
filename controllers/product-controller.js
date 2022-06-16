@@ -42,44 +42,26 @@ exports.createProduct = catchError(async(req , res , next) => {
 // })
 
 exports.getProductsBySearchKey = catchError(async (req , res , next) => {
+    let storesList = [];
     const {page , limit , search=''} = await req.query;
-    let products = await Product.find(
-        {'name': {'$regex': search,$options:'i'}}
-    )
-    .limit(limit)
-    .skip(limit * page);
-    let productDetailData = [];
-    for(let pro of await products) {
+    const stores = await Store.find();
+    for(let data of stores) {
         let searchCounts;
-        let storeId = await pro.storeId;
-        const store = await Store.findById(storeId);
-        const data = await {
-            product:pro,
-            store:store
-        }
-        await productDetailData.push(data);
-        if(pro?.searchCount) {
-            searchCounts = pro?.searchCount + 1
+        if(data?.searchCount) {
+            searchCounts = data?.searchCount + 1;
         } else {
             searchCounts = 1;
         }
-        Product.findByIdAndUpdate(
-            pro._id,
-          { searchCount: searchCounts},
-          function (err, docs) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log("Updated User : ", docs);
-            }
-          }
-        );
+        const products = await Product.find({'name': {'$regex': search,$options:'i'} , storeId:data._id});
+        if(products && products.length > 0) {
+            storesList.push(data);
+        }
     }
     return await res.status(200).json({
-        status: 'Success',
-        productDetailData
+        status:'Success',
+        storesList
     });
-})
+});
 
 exports.searchProductsByStore = catchError(async (req , res , next) => {
     const name = await req.params.name;
