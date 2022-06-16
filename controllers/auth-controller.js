@@ -23,7 +23,6 @@ const createSendToken = async(user,statusCode,res)=>{
 
 // SIGN UP PROCEEDURE
 exports.signUp = catchError(async(req, res,next)=>{
-    console.log("reached");
     const mobile = await req.body.mobile;
     //let email = '';
     const foundUser = await User.findOne({mobile});
@@ -58,9 +57,7 @@ exports.signUp = catchError(async(req, res,next)=>{
 
 // LOGIN PROCEEDURE
 exports.login = catchError(async(req,res,next)=>{
-    console.log("body" , req.body);
     const {mobile,password} = req.body;
-    console.log("mobile" , mobile);
     if(!mobile || !password){
         return next(new AppError('Please enter mobile and password',400));
     }

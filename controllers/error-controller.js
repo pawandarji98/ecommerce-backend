@@ -15,7 +15,6 @@ const AppError = require('../utils/app-error');
 
   // duplicate Error handler
   const handleDuplicateErrorDB =(err)=>{
-      console.log('enter');
     const value = err.errmsg.match(/(["'"])(\\?.)*?\1/)[0];
     const message = `Duplicate  field value :${value}. Please use another value`;
     return new AppError(message,400);

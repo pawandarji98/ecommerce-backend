@@ -26,7 +26,6 @@ exports.createStore = catchError(async(req , res , next) => {
 exports.getStoresLocationWise = catchError(async(req , res,  next) => {
     let stores = await Store.find().sort({searchCount: -1});
     const address = await req.params.address;
-    console.log(address);
     let data = [];
     //console.log("Stores" , stores);
     // for(let data of stores) {
@@ -40,7 +39,6 @@ exports.getStoresLocationWise = catchError(async(req , res,  next) => {
 
 exports.getStoreById = catchError(async (req , res , next) => {
     const id = req.params.id;
-    console.log("id" , req.params.id)
     const store = await Store.findById(id);
     res.status(201).json({
         status:'success',
